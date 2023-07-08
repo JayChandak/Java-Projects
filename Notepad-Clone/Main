@@ -1,0 +1,247 @@
+package notepad;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
+
+public class Notepad extends JFrame implements ActionListener{
+
+    JTextArea text;
+    String textStr;
+    
+//  Default Constructor     
+    Notepad(){             
+        setTitle("Notepad");        
+        ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("icons/notepad.jpg"));
+        Image notepadIcon = icon.getImage();
+        setIconImage(notepadIcon);
+        
+//      Menu Bar
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(Color.WHITE);        
+        
+//      Secions
+        JMenu file = new JMenu("File");
+        file.setMnemonic('F');
+        file.setBackground(Color.white);
+        file.setFont(new Font("Arial",Font.PLAIN,15));        
+        
+//      Items in that Section
+        JMenuItem newFile = new JMenuItem("New");
+        newFile.setBackground(Color.white);
+        newFile.addActionListener(this);
+        newFile.setFont(new Font("Calibri",Font.PLAIN,14));
+        newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));                
+                
+        JMenuItem open = new JMenuItem("Open");  
+        open.setBackground(Color.white);
+        open.addActionListener(this);
+        open.setFont(new Font("Calibri",Font.PLAIN,14));
+        open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));        
+        
+        JMenuItem save = new JMenuItem("Save");                
+        save.setBackground(Color.white);
+        save.addActionListener(this);
+        save.setFont(new Font("Calibri",Font.PLAIN,14));
+        save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        
+        JMenuItem print = new JMenuItem("Print");                
+        print.addActionListener(this);
+        print.setBackground(Color.white);
+        print.setFont(new Font("Arial",Font.PLAIN,14));
+        print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        
+        JMenuItem exit = new JMenuItem("Exit");                
+        exit.setFont(new Font("Arial",Font.PLAIN,14));
+        exit.setBackground(Color.white);
+        exit.addActionListener(this);
+        exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, ActionEvent.CTRL_MASK));        
+        
+        file.add(newFile);
+        file.add(open);
+        file.add(save);
+        file.add(print);
+        file.add(exit);
+        
+//      2nd Section - Edit
+        JMenu edit = new JMenu("Edit");
+        edit.setMnemonic('E');
+        edit.setFont(new Font("Arial",Font.PLAIN,15));        
+        
+        JMenuItem cut = new JMenuItem("Cut");                
+        cut.setBackground(Color.white);
+        cut.addActionListener(this);
+        cut.setFont(new Font("Calibri",Font.PLAIN,14));
+        cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));                
+                
+        JMenuItem copy = new JMenuItem("Copy");                
+        copy.setBackground(Color.white);
+        copy.addActionListener(this);
+        copy.setFont(new Font("Calibri",Font.PLAIN,14));
+        copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));        
+        
+        JMenuItem paste = new JMenuItem("Paste");                
+        paste.setBackground(Color.white);
+        paste.setFont(new Font("Calibri",Font.PLAIN,14));
+        paste.addActionListener(this);
+        paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        
+        JMenuItem selectAll = new JMenuItem("Select All");                
+        selectAll.setBackground(Color.white);
+        selectAll.setFont(new Font("Calibri",Font.PLAIN,14));
+        selectAll.addActionListener(this);
+        selectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        
+        edit.add(cut);
+        edit.add(copy);
+        edit.add(paste);
+        edit.add(selectAll);
+                
+        JMenu format = new JMenu("Format");
+//      adds underline below that character.
+        format.setMnemonic('o');
+        format.setFont(new Font("ARIAL",Font.PLAIN,15));
+        
+        JMenuItem wordWrap = new JMenuItem("Word Wrap");
+        wordWrap.setBackground(Color.white);
+        wordWrap.addActionListener(this);
+        wordWrap.setFont(new Font("Calibri",Font.PLAIN,14));
+        format.add(wordWrap);
+        
+        JMenuItem font = new JMenuItem("Font");
+        font.setBackground(Color.white);
+        font.addActionListener(this);
+        font.setFont(new Font("Calibri",Font.PLAIN,14));
+        format.add(font);
+        
+        JMenu view = new JMenu("View");
+        view.setMnemonic('V');
+        view.setBackground(Color.white);
+        view.setFont(new Font("ARIAL",Font.PLAIN,15));
+        
+        
+        JMenuItem zoom = new JMenuItem("Zoom");
+        zoom.setBackground(Color.white);
+        zoom.setBackground(Color.white);
+        zoom.setFont(new Font("ARIAL",Font.PLAIN,15));
+        view.add(zoom);
+        
+        JMenuItem statusBar = new JMenuItem("Status Bar");
+        statusBar.setBackground(Color.white);
+        statusBar.setFont(new Font("ARIAL",Font.PLAIN,15));
+        view.add(statusBar);
+        
+        JMenu help = new JMenu("Help");
+        help.setMnemonic('H');
+        help.setBackground(Color.white);
+        help.addActionListener(this);        
+        help.setFont(new Font("ARIAL",Font.PLAIN,15));
+                        
+        JMenuItem about = new JMenuItem("About");        
+        about.setBackground(Color.white);        
+        about.setFont(new Font("Arial",Font.PLAIN,14));        
+        about.addActionListener(this);
+        help.add(about);
+        
+        text = new JTextArea();
+        text.setFont(new Font("Sans_serif",Font.PLAIN,17));
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);                
+        
+        JScrollPane pane = new JScrollPane(text);
+//      To remove border
+        pane.setBorder(BorderFactory.createEmptyBorder());
+        add(pane);
+        
+        menuBar.add(file);        
+        menuBar.add(edit);
+        menuBar.add(format);
+        menuBar.add(view);
+        menuBar.add(help);       
+        
+        newFile.setBackground(Color.white);            
+        setJMenuBar(menuBar);                
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);                 
+        setLocation(100,50);
+        setSize(800, 600);
+        setVisible(true);        
+    }
+    @Override
+    public void actionPerformed(ActionEvent ae){
+//      File Section
+        if(ae.getActionCommand().equals("New")){
+            text.setText("");
+        }
+        else if(ae.getActionCommand().equals("Open")){
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter onlyTxt = new FileNameExtensionFilter("Only .txt files","txt");            
+            fileChooser.addChoosableFileFilter(onlyTxt);
+            int action = fileChooser.showOpenDialog(this);
+            
+            if(action != JFileChooser.APPROVE_OPTION){
+                return;
+            }
+            File file = fileChooser.getSelectedFile();
+            try{
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                text.read(reader, null);                    
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if(ae.getActionCommand().equals("Save")){
+            JFileChooser saveAs = new JFileChooser();
+            saveAs.setApproveButtonText("Save");
+            int action = saveAs.showOpenDialog(this);
+            
+            if(action != JFileChooser.APPROVE_OPTION){
+                return;
+            }
+            File file = new File(saveAs.getSelectedFile() + ".txt");
+            BufferedWriter outputText = null;
+            try{
+                outputText = new BufferedWriter(new FileWriter("filename"));                
+                text.write(outputText);
+            }catch(Exception e){
+                e.printStackTrace();                
+            }            
+        }
+        else if(ae.getActionCommand().equals("Print")){
+            try{
+                text.print();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if(ae.getActionCommand().equals("Exit")){           
+            System.exit(0);            
+        }
+        
+//      Edit Section
+        else if(ae.getActionCommand().equals("Cut")){
+            textStr = text.getSelectedText();
+            text.replaceRange("",text.getSelectionStart(),text.getSelectionEnd());
+        }
+        else if(ae.getActionCommand().equals("Copy")){
+            textStr = text.getSelectedText();
+        }
+        else if(ae.getActionCommand().equals("Paste")){
+            text.insert(textStr,text.getCaretPosition()); // | Blinker's Position       
+        }
+        else if(ae.getActionCommand().equals("Select All")){
+            text.selectAll();
+        }
+        else if(ae.getActionCommand().equals("About")){           
+            new About();
+        }
+    }
+    
+    public static void main(String[] args) {
+
+//      Annoynmous Object
+        new Notepad();
+                      
+    }   
+}
