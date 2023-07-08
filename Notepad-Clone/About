@@ -1,0 +1,50 @@
+package notepad;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class About extends JFrame implements ActionListener{
+ 
+    public About(){
+        setTitle("About Notepad");
+//        Frame
+//        setSize(400,400);
+        setBounds(400,120,500,400);
+    
+        setLayout(null);
+        setBackground(Color.white);
+        
+        ImageIcon win = new ImageIcon(ClassLoader.getSystemResource("icons/windows10.png"));
+        Image i2 = win.getImage().getScaledInstance(250,50,Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);       
+        JLabel icon = new JLabel(i3);
+//      this set Bounds works only when layout is null.
+        icon.setBounds(60,30,350,70);
+        add(icon);
+        
+        ImageIcon not = new ImageIcon(ClassLoader.getSystemResource("icons/notepad.jpg"));
+        Image i4 = not.getImage().getScaledInstance(60,60,Image.SCALE_DEFAULT);
+        ImageIcon i5 = new ImageIcon(i4);       
+        JLabel notepad = new JLabel(i5);
+        notepad.setBounds(60,160,60,60);
+        add(notepad);
+        
+        JLabel text = new JLabel("<html>Jay Chandak <br> Version 22H2(OS...) This is a Notepad clone created with Java Swing. </html>");
+        text.setBounds(170,60,500,300);
+        add(text);
+        
+        JButton btn = new JButton("OK");
+        btn.addActionListener(this);
+        btn.setBounds(250,300,100,40);        
+        btn.setForeground(Color.black);
+        btn.setBackground(Color.white);
+        add(btn);
+        
+        setVisible(true);
+    }
+        
+    public void actionPerformed(ActionEvent ae){
+        this.setVisible(false);
+    }    
+}
